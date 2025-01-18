@@ -4,11 +4,15 @@ Django settings for project project.
 
 import inspect
 import logging
+from datetime import timedelta
 from functools import wraps
 from pathlib import Path
 
 import environ
 import structlog
+
+# from celery.schedules import crontab
+from kombu import Queue
 
 root = environ.Path(__file__) - 2
 
@@ -66,6 +70,8 @@ INSTALLED_APPS = [
     "health_check.contrib.migrations",
     "health_check.contrib.psutil",
     "health_check.contrib.redis",
+    "health_check.contrib.celery",
+    "health_check.contrib.celery_ping",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -238,6 +244,43 @@ REDIS_HOST = env("REDIS_HOST")
 REDIS_PORT = env.int("REDIS_PORT")
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}"
 
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG = {
+    # "PARAMETER": (default-value, "Help text", type),
+}
+
+
+CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="")
+CELERY_RESULT_BACKEND = env("CELERY_BROKER_URL", default="")  # store results in Redis
+CELERY_RESULT_EXPIRES = int(timedelta(days=1).total_seconds())  # time until task result deletion
+CELERY_COMPRESSION = "gzip"  # task compression
+CELERY_MESSAGE_COMPRESSION = "gzip"  # result compression
+CELERY_SEND_EVENTS = True  # needed for worker monitoring
+CELERY_BEAT_SCHEDULE = {  # type: ignore
+    # 'task_name': {
+    #     'task': "project.core.tasks.demo_task",
+    #     'args': [2, 2],
+    #     'kwargs': {},
+    #     'schedule': crontab(minute=0, hour=0),
+    #     'options': {"time_limit": 300},
+    # },
+}
+CELERY_TASK_CREATE_MISSING_QUEUES = False
+CELERY_TASK_QUEUES = (Queue("celery"), Queue("worker"), Queue("dead_letter"))
+CELERY_TASK_DEFAULT_EXCHANGE = "celery"
+CELERY_TASK_DEFAULT_ROUTING_KEY = "celery"
+CELERY_TASK_ANNOTATIONS = {"*": {"acks_late": True, "reject_on_worker_lost": True}}
+CELERY_TASK_ROUTES = {"*": {"queue": "celery"}}
+CELERY_TASK_TIME_LIMIT = int(timedelta(minutes=5).total_seconds())
+CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER", default=False)
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_WORKER_PREFETCH_MULTIPLIER = env.int("CELERY_WORKER_PREFETCH_MULTIPLIER", default=1)
+CELERY_BROKER_POOL_LIMIT = env.int("CELERY_BROKER_POOL_LIMIT", default=50)
+
+DJANGO_STRUCTLOG_CELERY_ENABLED = True
+
 EMAIL_BACKEND = env("EMAIL_BACKEND")
 EMAIL_FILE_PATH = env("EMAIL_FILE_PATH")
 EMAIL_HOST = env("EMAIL_HOST")
@@ -320,6 +363,7 @@ configure_structlog()
 # Sentry
 if SENTRY_DSN := env("SENTRY_DSN", default=""):
     import sentry_sdk
+    from sentry_sdk.integrations.celery import CeleryIntegration
     from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.logging import LoggingIntegration, ignore_logger
     from sentry_sdk.integrations.redis import RedisIntegration
@@ -329,6 +373,7 @@ if SENTRY_DSN := env("SENTRY_DSN", default=""):
         environment=ENV,
         integrations=[
             DjangoIntegration(),
+            CeleryIntegration(),
             RedisIntegration(),
             LoggingIntegration(
                 level=logging.INFO,  # Capture info and above as breadcrumbs

@@ -57,6 +57,57 @@ services:
     logging:
       <<: *logging
 
+  celery-worker:
+    image: project/app
+    init: true
+    healthcheck:
+      test: celery -A project status > /dev/null || exit 1
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=off
+      - PROMETHEUS_MULTIPROC_DIR=/prometheus-multiproc-dir/celery-worker
+    command: ./celery-entrypoint.sh
+    volumes:
+      - ./prometheus-metrics:/prometheus-multiproc-dir
+    tmpfs: /run
+    depends_on:
+      - redis
+    logging:
+      <<: *logging
+
+  celery-beat:
+    image: project/app
+    init: true
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=off
+    command: nice celery -A project beat -l INFO --schedule /tmp/celerybeat-schedule -f /tmp/logs/celery-beat.log
+    volumes:
+      - ./logs:/tmp/logs
+    depends_on:
+      - redis
+    logging:
+      <<: *logging
+
+  celery-flower:
+    image: project/app
+    healthcheck:
+      test: wget --user "${CELERY_FLOWER_USER}" --password "${CELERY_FLOWER_PASSWORD}" -qO- 127.0.0.1:5555 > /dev/null || exit 1
+    init: true
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=off
+    command: celery --app=project --broker="${CELERY_BROKER_URL}" flower --basic_auth="${CELERY_FLOWER_USER}:${CELERY_FLOWER_PASSWORD}"
+    depends_on:
+      - celery-worker
+    ports:
+      - 5555:5555
+    logging:
+      <<: *logging
+  
   nginx:
     image: 'ghcr.io/reef-technologies/nginx-rt:v1.2.2'
     restart: unless-stopped
