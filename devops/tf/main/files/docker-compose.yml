@@ -13,7 +13,7 @@ services:
       driver: awslogs
       options:
         awslogs-region: ${region}
-        awslogs-group: /aws/ec2/${name}-${env}
+        awslogs-group: /aws/ec2/${name}-${env}-redis
         tag: '$${INSTANCE_ID_SUBST}-redis'
         awslogs-create-group: "true"
 
