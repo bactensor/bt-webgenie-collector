@@ -1,1 +1,7 @@
 ${ec2_ssh_key}
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJxDDbeThkg4HIAxjM1jMESYZK5icMqM3kF+EIOPeQ7E michal.nowacki@reef.pl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKGhCyKumRGm8Kz9aVutHjkTLrQf/xV/Dhfwq070JHxl michal.zukowski@reef.pl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAQuCO65/3Jm2qcHe55t+kXVP9RzVe2GVfAxCBjFx6VL andreea.popescu@reef.pl
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPWoKlJyG1T6x/LcSLB0/yVdB92EoDodyCmIQSSpVPGP kordian@kordian-reef
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG6ryuzDOhBvDF8Taz6TIO0sAx9zZTxX+AvJVgRKkUy6 sgorawski-reef@MacBook-Air-Sawomir.local
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINL5xrAUJR1gB/BWXJetVluwhi8yObV5az0Ci2/zfThU Alex
