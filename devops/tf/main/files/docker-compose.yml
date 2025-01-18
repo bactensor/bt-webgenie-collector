@@ -1,6 +1,22 @@
 version: '3.7'
 
 services:
+  redis:
+    image: redis:6-alpine
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: redis-cli ping
+    restart: unless-stopped
+    volumes:
+      - ./redis/data:/data
+    logging:
+      driver: awslogs
+      options:
+        awslogs-region: ${region}
+        awslogs-group: /aws/ec2/${name}-${env}
+        tag: '$${INSTANCE_ID_SUBST}-redis'
+        awslogs-create-group: "true"
+
   app:
     image: ${ecr_base_url}/${ecr_image}
     init: true
@@ -23,8 +39,9 @@ services:
     
       # Add this mount to each container that should dump Prometheus metrics.
       - ./prometheus-metrics:/prometheus-multiproc-dir
-    
-    logging:
+    depends_on:
+      - redis
+    logging: &logging-app
       driver: awslogs
       options:
         awslogs-region: ${region}
@@ -32,7 +49,49 @@ services:
         tag: '$${INSTANCE_ID_SUBST}-app'
         awslogs-create-group: "true"
 
-  
+  celery-worker:
+    image: ${ecr_base_url}/${ecr_image}
+    init: true
+    healthcheck:
+      test: celery -A project status > /dev/null || exit 1
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=0
+      - PROMETHEUS_MULTIPROC_DIR=/prometheus-multiproc-dir/celery-worker
+    command: ./celery-entrypoint.sh
+    volumes:
+      - ./prometheus-metrics:/prometheus-multiproc-dir
+    tmpfs: /run
+    depends_on:
+      - redis
+
+  celery-beat:
+    image: ${ecr_base_url}/${ecr_image}
+    init: true
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=0
+    command: nice celery -A project beat -l INFO --schedule /tmp/celerybeat-schedule -f /tmp/logs/celery-beat.log
+    volumes:
+      - ./logs:/tmp/logs
+    depends_on:
+      - redis
+
+  celery-flower:
+    image: ${ecr_base_url}/${ecr_image}
+    init: true
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - DEBUG=0
+    command: celery --app=project --broker="redis://redis:6379/0" flower --basic_auth="flower:"
+    depends_on:
+      - celery-worker
+    ports:
+      - 5555:5555
+
   node-exporter:
     image: ghcr.io/reef-technologies/node-exporter-aws-ec2:latest
     container_name: node-exporter

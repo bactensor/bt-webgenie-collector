@@ -28,4 +28,4 @@ rds_instance_type = "db.t3.small"
 # defines if we use EC2-only healthcheck or ELB healthcheck
 # EC2 healthcheck reacts only on internal EC2 checks (i.e. if machine cannot be reached)
 # recommended for staging = EC2, for prod = ELB
-autoscaling_health_check_type = "ELB"
+autoscaling_health_check_type = "EC2"
