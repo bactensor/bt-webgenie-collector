@@ -211,9 +211,6 @@ REST_FRAMEWORK = {
     ],
 }
 SIGNATURE_EXPIRE_DURATION = env("SIGNATURE_EXPIRE_DURATION", default="300")
-BITTENSOR_WALLET_PATH = env.path("BITTENSOR_WALLET_PATH", default=Path("/root/.bittensor/wallets"))
-BITTENSOR_WALLET_NAME = env("BITTENSOR_WALLET_NAME", default="validator")
-BITTENSOR_HOTKEY_NAME = env("BITTENSOR_HOTKEY_NAME", default="validator-hotkey")
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
