@@ -5,6 +5,7 @@ Django settings for project project.
 import inspect
 import logging
 from functools import wraps
+from pathlib import Path
 
 import environ
 import structlog
@@ -75,6 +76,7 @@ INSTALLED_APPS = [
     "django_probes",
     "django_structlog",
     "constance",
+    "rest_framework",
     "project.core",
 ]
 PROMETHEUS_EXPORT_MIGRATIONS = env.bool("PROMETHEUS_EXPORT_MIGRATIONS", default=True)
@@ -198,6 +200,20 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "project.core.authentication.HotkeyAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ],
+}
+SIGNATURE_EXPIRE_DURATION = env("SIGNATURE_EXPIRE_DURATION", default="300")
+BITTENSOR_WALLET_PATH = env.path("BITTENSOR_WALLET_PATH", default=Path("/root/.bittensor/wallets"))
+BITTENSOR_WALLET_NAME = env("BITTENSOR_WALLET_NAME", default="validator")
+BITTENSOR_HOTKEY_NAME = env("BITTENSOR_HOTKEY_NAME", default="validator-hotkey")
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
