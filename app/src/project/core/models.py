@@ -2,8 +2,9 @@ from django.db import models
 from django.db.models import UniqueConstraint
 
 
-class AbstractNeuron(models.Model):
+class Neuron(models.Model):
     hotkey = models.CharField(max_length=48)
+    is_active_validator = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
@@ -12,11 +13,6 @@ class AbstractNeuron(models.Model):
 
     def __str__(self) -> str:
         return self.hotkey
-
-
-class Neuron(AbstractNeuron):
-    # is_active = models.BooleanField()
-    ...
 
 
 class AbstractDataFromValidator(models.Model):

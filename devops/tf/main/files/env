@@ -10,6 +10,9 @@ DATABASE_URL=${database_connection_string}
 REDIS_HOST=redis
 REDIS_PORT=6379
 
+BITTENSOR_NETUID=12
+BITTENSOR_NETWORK=finney
+
 EMAIL_BACKEND=django.core.mail.backends.filebased.EmailBackend
 EMAIL_FILE_PATH=/tmp/email
 EMAIL_HOST=smtp.sendgrid.net

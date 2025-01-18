@@ -21,7 +21,8 @@ admin.site.index_title = "Welcome to project Administration"
 
 @register(Neuron)
 class NeuronAdmin(admin.ModelAdmin):
-    list_display = "pk", "hotkey",
+    list_display = "pk", "hotkey", "is_active_validator",
+    list_filter = "is_active_validator",
     search_fields = "hotkey",
     ordering = "hotkey",
 

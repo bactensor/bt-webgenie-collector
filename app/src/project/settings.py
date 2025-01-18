@@ -216,6 +216,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
 }
+BITTENSOR_NETUID = env("BITTENSOR_NETUID")
+BITTENSOR_NETWORK = env("BITTENSOR_NETWORK")
 SIGNATURE_EXPIRE_DURATION = env("SIGNATURE_EXPIRE_DURATION", default="300")
 
 # Internationalization
@@ -256,14 +258,12 @@ CELERY_RESULT_EXPIRES = int(timedelta(days=1).total_seconds())  # time until tas
 CELERY_COMPRESSION = "gzip"  # task compression
 CELERY_MESSAGE_COMPRESSION = "gzip"  # result compression
 CELERY_SEND_EVENTS = True  # needed for worker monitoring
-CELERY_BEAT_SCHEDULE = {  # type: ignore
-    # 'task_name': {
-    #     'task': "project.core.tasks.demo_task",
-    #     'args': [2, 2],
-    #     'kwargs': {},
-    #     'schedule': crontab(minute=0, hour=0),
-    #     'options': {"time_limit": 300},
-    # },
+CELERY_BEAT_SCHEDULE = {
+    "sync_validators": {
+        "task": "project.core.tasks.sync_validators",
+        "schedule": timedelta(minutes=5),
+        "options": {"time_limit": 60},
+    },
 }
 CELERY_TASK_CREATE_MISSING_QUEUES = False
 CELERY_TASK_QUEUES = (Queue("celery"), Queue("worker"), Queue("dead_letter"))

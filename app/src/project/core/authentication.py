@@ -7,14 +7,14 @@ from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
+from .models import Neuron
+
 
 class HotkeyAuthentication(BaseAuthentication):
 
     def authenticate(self, request: HttpRequest) -> tuple[None, None]:
 
         method = request.method.upper()
-        # if method == "GET":
-        #     return (None, None)
 
         hotkey = request.headers.get("Hotkey")
         nonce = request.headers.get("Nonce")
@@ -25,8 +25,8 @@ class HotkeyAuthentication(BaseAuthentication):
         if abs(time.time() - float(nonce)) > int(settings.SIGNATURE_EXPIRE_DURATION):
             raise AuthenticationFailed("Invalid nonce")
 
-        # if not Neuron.objects.filter(hotkey=hotkey).exists():
-        #     raise AuthenticationFailed("Unauthorized hotkey.")
+        if not Neuron.objects.filter(hotkey=hotkey, is_active_validator=True).exists():
+            raise AuthenticationFailed("Unauthorized hotkey.")
 
         client_headers = {
             "Nonce": nonce,
