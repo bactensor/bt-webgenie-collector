@@ -1,5 +1,3 @@
-# https://github.com/bactensor/bt-auto-dumper/blob/64ad702ffa622a9f81407eb7e828bb812faf2eac/src/bt_auto_dumper/_v2/__main__.py#L95
-
 from io import BufferedReader
 import json
 import time
@@ -62,18 +60,6 @@ def make_signed_request(
     file_path: str | None = None,
     subnet_chain: str = 'mainnet',
 ) -> requests.Response:
-    """
-    Example:
-        >>> make_signed_request(
-            "POST",
-            "http://localhost:8000/api/v1/files/",
-            {"Note": "Test"},
-            "/path/test.zip",
-            wallet,
-            "mainnet",
-        )
-
-    """
     headers = {
         'Realm': subnet_chain,
         'SubnetID': str(subnet_id),
