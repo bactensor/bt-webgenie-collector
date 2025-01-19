@@ -13,7 +13,7 @@ logger = structlog.wrap_logger(get_task_logger(__name__))
 
 
 def is_validator(neuron: NeuronInfo) -> bool:
-    return neuron.stake > 0
+    return neuron.stake > 1_000
 
 
 def send_to_dead_letter_queue(task: Task, exc, task_id, args, kwargs, einfo):
