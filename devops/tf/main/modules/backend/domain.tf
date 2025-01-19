@@ -4,6 +4,11 @@ data "aws_route53_zone" "self" {
 
 resource "aws_route53_record" "a" {
   zone_id = data.aws_route53_zone.self.zone_id
+  lifecycle {
+    ignore_changes = [
+      zone_id
+    ]
+  }
   name = var.domain_name
   type = "A"
 
@@ -35,6 +40,12 @@ resource "aws_route53_record" "cert-validation" {
       record = dvo.resource_record_value
       type   = dvo.resource_record_type
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      zone_id
+    ]
   }
 
   allow_overwrite = true

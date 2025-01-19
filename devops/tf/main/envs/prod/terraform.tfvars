@@ -7,8 +7,8 @@ env              = "prod"
 
 # VPC and subnet CIDR settings, change them if you need to pair
 # multiple CIDRs (i.e. with different component)
-vpc_cidr         = "10.2.0.0/16"
-subnet_cidrs     = ["10.2.1.0/24", "10.2.2.0/24"]
+vpc_cidr         = "10.3.0.0/16"
+subnet_cidrs     = ["10.3.1.0/24", "10.3.2.0/24"]
 azs              = ["us-east-1c", "us-east-1d"]
 
 # By default, we have an ubuntu image

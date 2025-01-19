@@ -2,6 +2,13 @@ resource "aws_security_group" "db" {
   name        = "${var.name}-db-sg"
   vpc_id      = var.vpc_id
 
+  lifecycle {
+    ignore_changes = [
+      # Ignore changes to ingress
+      ingress,
+    ]
+  }
+
   ingress {
     description      = "allow traffic to postgres port from within VPC"
     from_port        = 5432
