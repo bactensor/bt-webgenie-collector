@@ -51,9 +51,18 @@ class NeuronSerializer(ModelSerializer):
         )
 
 
+class CreatableSlugRelatedField(SlugRelatedField):
+    def to_internal_value(self, data):
+        try:
+            instance, _ = self.get_queryset().get_or_create(**{self.slug_field: data})
+            return instance
+        except (TypeError, ValueError) as exc:
+            self.fail(str(exc))
+
+
 class JudgementSerializer(BaseSerializer):
-    miner = SlugRelatedField(slug_field="hotkey", queryset=Neuron.objects.all())
-    validator = SlugRelatedField(slug_field="hotkey", queryset=Neuron.objects.all())
+    miner = CreatableSlugRelatedField(slug_field="hotkey", queryset=Neuron.objects.all())
+    validator = CreatableSlugRelatedField(slug_field="hotkey", queryset=Neuron.objects.all())
 
     class Meta(BaseSerializer.Meta):
         model = Judgement
