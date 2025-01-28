@@ -1,4 +1,5 @@
 from django.db import transaction
+from rest_framework.fields import CharField, JSONField
 from rest_framework.serializers import ModelSerializer, SlugRelatedField
 
 from .models import (
@@ -106,6 +107,7 @@ class SolutionEvaluationSerializer(BaseSerializer):
 
 class TaskSolutionSerializer(BaseSerializer):
     solution_evaluations = SolutionEvaluationSerializer(many=True)
+    miner_answer = JSONField(write_only=True)
 
     class Meta(BaseSerializer.Meta):
         model = TaskSolution
@@ -132,6 +134,7 @@ class TaskSolutionSerializer(BaseSerializer):
 
 class ChallengeSerializer(BaseSerializer):
     task_solutions = TaskSolutionSerializer(many=True)
+    ground_truth_html = CharField(write_only=True)
 
     class Meta(BaseSerializer.Meta):
         model = Challenge
@@ -153,6 +156,19 @@ class ChallengeSerializer(BaseSerializer):
             })
 
         return challenge
+
+
+class ChallengeDetailsSerializer(ChallengeSerializer):
+    sender = NeuronSerializer(read_only=True)
+    task_solutions = TaskSolutionSerializer(many=True)
+
+    class Meta(ChallengeSerializer.Meta):
+        fields = (
+            "sender",
+            "received_at",
+            *ChallengeSerializer.Meta.fields,
+        )
+
 
 class LeaderboardSessionSerializer(BaseSerializer):
     challenges = ChallengeSerializer(many=True)

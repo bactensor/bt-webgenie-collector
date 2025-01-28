@@ -3,12 +3,14 @@ from django.contrib.admin.sites import site
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .core.api import CompetitionViewSet
+from .core.api import ChallengeViewSet, CompetitionViewSet, TaskSolutionViewSet
 from .core.business_metrics import metrics_manager
 from .core.metrics import metrics_view
 
 api_router = DefaultRouter()
 api_router.register('competitions', CompetitionViewSet)
+api_router.register('challenges', ChallengeViewSet)
+api_router.register('solutions', TaskSolutionViewSet)
 
 urlpatterns = [
     path("admin/", site.urls),
