@@ -1,6 +1,7 @@
-from io import BufferedReader
 import json
 import time
+from io import BufferedReader
+
 import requests
 from bittensor import Wallet
 

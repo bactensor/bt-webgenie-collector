@@ -6,7 +6,6 @@ import inspect
 import logging
 from datetime import timedelta
 from functools import wraps
-from pathlib import Path
 
 import environ
 import structlog

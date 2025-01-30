@@ -1,13 +1,12 @@
 import bittensor
-from bittensor import NeuronInfo
 import structlog
+from bittensor import NeuronInfo
 from celery import Task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 
-from .models import Neuron
-
 from ..celery import app
+from .models import Neuron
 
 logger = structlog.wrap_logger(get_task_logger(__name__))
 

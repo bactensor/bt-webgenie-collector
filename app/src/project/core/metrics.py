@@ -1,9 +1,7 @@
 import glob
 import os
-from functools import partial
 
 import prometheus_client
-from django.conf import settings
 from django.http import HttpResponse
 from django_prometheus.exports import ExportToDjangoView
 from prometheus_client import multiprocess

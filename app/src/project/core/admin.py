@@ -2,17 +2,17 @@ from django.contrib import admin
 from django.contrib.admin import register
 from django.db.models import QuerySet
 from django.http import HttpRequest
+
 from .models import (
-    Neuron,
-    Competition,
-    LeaderboardSession,
     Challenge,
-    TaskSolution,
+    Competition,
     EvaluationType,
     Judgement,
+    LeaderboardSession,
+    Neuron,
     SolutionEvaluation,
+    TaskSolution,
 )
-
 
 admin.site.site_header = "project Administration"
 admin.site.site_title = "project"
