@@ -8,6 +8,7 @@ on:
 
 env:
   PYTHON_DEFAULT_VERSION: "3.11"
+  ENV_FILL_MISSING_VALUES: 1
 
 jobs:
   linter:
