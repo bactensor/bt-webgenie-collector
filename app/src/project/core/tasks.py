@@ -1,13 +1,12 @@
 import bittensor
-from bittensor import NeuronInfo
 import structlog
+from bittensor import NeuronInfo
 from celery import Task
 from celery.utils.log import get_task_logger
 from django.conf import settings
 
-from .models import Neuron
-
 from ..celery import app
+from .models import Neuron
 
 logger = structlog.wrap_logger(get_task_logger(__name__))
 
@@ -46,8 +45,8 @@ def sync_validators() -> None:
     num_activated = to_activate.update(is_active_validator=True)
     logger.debug("validators activated", num_activated=num_activated)
 
-    to_create = set(active_validators_keys) - set(Neuron.objects.filter(is_active_validator=True).values_list("hotkey", flat=True))
-    num_created = Neuron.objects.bulk_create(
-        [Neuron(hotkey=hotkey, is_active_validator=True) for hotkey in to_create]
+    to_create = set(active_validators_keys) - set(
+        Neuron.objects.filter(is_active_validator=True).values_list("hotkey", flat=True)
     )
+    num_created = Neuron.objects.bulk_create([Neuron(hotkey=hotkey, is_active_validator=True) for hotkey in to_create])
     logger.debug("validators created", num_created=num_created)

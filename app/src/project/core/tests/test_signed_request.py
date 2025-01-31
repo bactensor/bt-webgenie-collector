@@ -1,53 +1,42 @@
-from io import BufferedReader
 import json
 import time
+from io import BufferedReader
+
+import pytest
 import requests
 from bittensor import Wallet
 
 TEST_PAYLOAD = {
     "external_id": 1,
     "name": "Competition 1",
-        "leaderboard_sessions": [
+    "leaderboard_sessions": [
         {
             "external_id": 3,
             "created_at": "2025-01-18T06:00:00Z",
             "challenges": [
-                    {
+                {
                     "external_id": 5,
                     "ground_truth_html": "Groundtruth HTML for challenge 1",
                     "task_solutions": [
                         {
                             "external_id": 5,
                             "created_at": "2025-01-18T09:38:59Z",
-                            "miner_answer": {
-                                "this is": "miner answer"
-                            },
+                            "miner_answer": {"this is": "miner answer"},
                             "solution_evaluations": [
                                 {
                                     "external_id": 6,
-                                    "judgement": {
-                                        "external_id": 6,
-                                        "miner": "neuron-two",
-                                        "validator": "neuron-three"
-                                    },
-                                    "evaluation_type": {
-                                        "external_id": 6,
-                                        "name": "Pagespeed rank"
-                                    },
-                                    "value": 0.93
+                                    "judgement": {"external_id": 6, "miner": "neuron-two", "validator": "neuron-three"},
+                                    "evaluation_type": {"external_id": 6, "name": "Pagespeed rank"},
+                                    "value": 0.93,
                                 }
-                            ]
+                            ],
                         }
-                    ]
+                    ],
                 },
-                {
-                    "external_id": 6,
-                    "ground_truth_html": "Groundtruth HTML for challenge 2",
-                    "task_solutions": []
-                }
-            ]
+                {"external_id": 6, "ground_truth_html": "Groundtruth HTML for challenge 2", "task_solutions": []},
+            ],
         }
-    ]
+    ],
 }
 
 
@@ -56,15 +45,15 @@ def make_signed_request(
     url: str,
     subnet_id: int,
     payload: dict,
-    method: str = 'POST',
+    method: str = "POST",
     file_path: str | None = None,
-    subnet_chain: str = 'mainnet',
+    subnet_chain: str = "mainnet",
 ) -> requests.Response:
     headers = {
-        'Realm': subnet_chain,
-        'SubnetID': str(subnet_id),
-        'Nonce': str(time.time()),
-        'Hotkey': wallet.hotkey.ss58_address,
+        "Realm": subnet_chain,
+        "SubnetID": str(subnet_id),
+        "Nonce": str(time.time()),
+        "Hotkey": wallet.hotkey.ss58_address,
     }
 
     file_content = b""
@@ -90,6 +79,7 @@ def make_signed_request(
     return response
 
 
+@pytest.mark.skip
 def test_send_payload() -> None:
     wallet = Wallet()
 
@@ -104,5 +94,5 @@ def test_send_payload() -> None:
         print(response.json())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test_send_payload()

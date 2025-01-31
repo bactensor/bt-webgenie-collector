@@ -8,6 +8,7 @@ on:
 
 env:
   PYTHON_DEFAULT_VERSION: "3.11"
+  ENV_FILL_MISSING_VALUES: 1
 
 jobs:
   linter:
@@ -20,11 +21,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_DEFAULT_VERSION }}
-          cache: "pip"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.11"
       - name: Install dependencies
-        run: python -m pip install --upgrade nox 'pdm>=2.12,<3'
+        run: uv add nox
       - name: Run linters
-        run: nox -vs lint
+        run: uv run nox -vs lint
   test:
     timeout-minutes: 10
     runs-on: ubuntu-latest
@@ -36,17 +40,20 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_DEFAULT_VERSION }}
-          cache: "pip"
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.11"
       - name: Install dependencies
-        run: python -m pip install --upgrade nox 'pdm>=2.12,<3'
+        run: uv add nox
       - name: Prepare environment
         run: ./setup-dev.sh
       - name: Run dockerized services
         run: docker compose up -d --wait
       - name: Run migrations
-        run: cd app/src && pdm run python manage.py wait_for_database --timeout 120 && pdm run python manage.py migrate
+        run: cd app/src && uv run python manage.py wait_for_database --timeout 120 && uv run python manage.py migrate
       - name: Run unit tests
-        run: nox -vs test
+        run: uv run nox -vs test
       - name: Stop dockerized services
         if: success() || failure()
         run: docker compose down -v

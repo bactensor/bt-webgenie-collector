@@ -6,7 +6,6 @@ import inspect
 import logging
 from datetime import timedelta
 from functools import wraps
-from pathlib import Path
 
 import environ
 import structlog
@@ -216,6 +215,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
 }
+REST_FRAMEWORK_ALLOWED_REFERRERS = env.list("REST_FRAMEWORK_ALLOWED_REFERRERS")
 BITTENSOR_NETUID = env("BITTENSOR_NETUID")
 BITTENSOR_NETWORK = env("BITTENSOR_NETWORK")
 SIGNATURE_EXPIRE_DURATION = env("SIGNATURE_EXPIRE_DURATION", default="300")

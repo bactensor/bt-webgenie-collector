@@ -12,6 +12,7 @@ REDIS_PORT=6379
 
 BITTENSOR_NETUID=54
 BITTENSOR_NETWORK=finney
+REST_FRAMEWORK_ALLOWED_REFERRERS=grafana.bactensor.io,internal.grafana.bactensor.io
 
 EMAIL_BACKEND=django.core.mail.backends.filebased.EmailBackend
 EMAIL_FILE_PATH=/tmp/email

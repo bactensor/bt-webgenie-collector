@@ -38,6 +38,11 @@ class LeaderboardSession(AbstractDataFromValidator):
     competition = models.ForeignKey(Competition, on_delete=models.CASCADE, related_name="leaderboard_sessions")
     created_at = models.DateTimeField()
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["-created_at"]),
+        ]
+
     def __str__(self) -> str:
         return f"Session {self.pk}"
 

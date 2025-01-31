@@ -3,6 +3,8 @@ import time
 
 from bittensor import Keypair
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractBaseUser
 from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -11,11 +13,8 @@ from .models import Neuron
 
 
 class HotkeyAuthentication(BaseAuthentication):
-
-    def authenticate(self, request: HttpRequest) -> tuple[None, None]:
-
+    def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, str]:
         method = request.method.upper()
-
         hotkey = request.headers.get("Hotkey")
         nonce = request.headers.get("Nonce")
         signature = request.headers.get("Signature")
@@ -57,4 +56,4 @@ class HotkeyAuthentication(BaseAuthentication):
         if not is_valid:
             raise AuthenticationFailed("Invalid signature.")
 
-        return None, None
+        return get_user_model(), hotkey
