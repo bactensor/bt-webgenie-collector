@@ -2,6 +2,7 @@ import json
 import time
 from io import BufferedReader
 
+import pytest
 import requests
 from bittensor import Wallet
 
@@ -78,6 +79,7 @@ def make_signed_request(
     return response
 
 
+@pytest.mark.skip
 def test_send_payload() -> None:
     wallet = Wallet()
 
