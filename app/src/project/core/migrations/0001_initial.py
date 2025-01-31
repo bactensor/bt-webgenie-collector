@@ -24,9 +24,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("ground_truth_html", models.TextField()),
@@ -49,9 +47,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("name", models.CharField()),
@@ -74,9 +70,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("name", models.CharField()),
@@ -99,9 +93,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
             ],
@@ -123,9 +115,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("created_at", models.DateTimeField()),
@@ -164,9 +154,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("created_at", models.DateTimeField()),
@@ -206,9 +194,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_id",
-                    models.BigIntegerField(
-                        help_text="ID as if in Validator's internals"
-                    ),
+                    models.BigIntegerField(help_text="ID as if in Validator's internals"),
                 ),
                 ("received_at", models.DateTimeField(auto_now_add=True)),
                 ("value", models.FloatField()),
@@ -251,9 +237,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="neuron",
-            constraint=models.UniqueConstraint(
-                fields=("hotkey",), name="unique_neuron_hotkey"
-            ),
+            constraint=models.UniqueConstraint(fields=("hotkey",), name="unique_neuron_hotkey"),
         ),
         migrations.AddField(
             model_name="leaderboardsession",

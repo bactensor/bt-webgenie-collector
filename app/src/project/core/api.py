@@ -16,20 +16,20 @@ from .serializers import ChallengeDetailsSerializer, CompetitionSerializer, Task
 class CompetitionViewSet(CreateModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class HasValidReferralPermission(BasePermission):
-    message = 'Invalid referrer'
+    message = "Invalid referrer"
 
     def has_permission(self, request: Request, view) -> bool:
-        referrer = request.headers.get('referer', '')
+        referrer = request.headers.get("referer", "")
         return referrer in settings.REST_FRAMEWORK_ALLOWED_REFERRERS
 
 
 class DownloadOnlyIfReferralMixin(GenericViewSet):
     def get_permissions(self, *args, **kwargs) -> list[BasePermission]:
-        if self.action == 'download':
+        if self.action == "download":
             self.permission_classes += (HasValidReferralPermission,)
         return super().get_permissions(*args, **kwargs)
 
@@ -37,16 +37,16 @@ class DownloadOnlyIfReferralMixin(GenericViewSet):
 class ChallengeViewSet(DownloadOnlyIfReferralMixin, RetrieveModelMixin, GenericViewSet):
     queryset = Challenge.objects.all()
     serializer_class = ChallengeDetailsSerializer
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     @action(detail=True)
     def download(self, request: Request, *args, **kwargs) -> StreamingHttpResponse:
         challenge = self.get_object()
         return StreamingHttpResponse(
             StringIO(challenge.ground_truth_html),
-            content_type='text/plain; charset=UTF-8',
+            content_type="text/plain; charset=UTF-8",
             headers={
-                'Content-Disposition': f'attachment; filename="challenge{challenge.id}.html"',
+                "Content-Disposition": f'attachment; filename="challenge{challenge.id}.html"',
             },
         )
 
@@ -54,15 +54,15 @@ class ChallengeViewSet(DownloadOnlyIfReferralMixin, RetrieveModelMixin, GenericV
 class TaskSolutionViewSet(DownloadOnlyIfReferralMixin, RetrieveModelMixin, GenericViewSet):
     queryset = TaskSolution.objects.all()
     serializer_class = TaskSolutionSerializer
-    permission_classes = IsAuthenticatedOrReadOnly,
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     @action(detail=True)
     def download(self, request: Request, *args, **kwargs) -> StreamingHttpResponse:
         solution = self.get_object()
         return StreamingHttpResponse(
             StringIO(json.dumps(solution.miner_answer)),
-            content_type='application/json; charset=UTF-8',
+            content_type="application/json; charset=UTF-8",
             headers={
-                'Content-Disposition': f'attachment; filename="solution{solution.id}.json"',
+                "Content-Disposition": f'attachment; filename="solution{solution.id}.json"',
             },
         )

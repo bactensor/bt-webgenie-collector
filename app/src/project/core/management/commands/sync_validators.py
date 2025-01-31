@@ -4,6 +4,5 @@ from ...tasks import sync_validators
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **kwargs):
         sync_validators()

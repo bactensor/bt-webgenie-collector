@@ -15,8 +15,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name="leaderboardsession",
-            index=models.Index(
-                fields=["-created_at"], name="core_leader_created_752fdb_idx"
-            ),
+            index=models.Index(fields=["-created_at"], name="core_leader_created_752fdb_idx"),
         ),
     ]

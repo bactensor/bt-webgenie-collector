@@ -13,7 +13,6 @@ from .models import Neuron
 
 
 class HotkeyAuthentication(BaseAuthentication):
-
     def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, str]:
         method = request.method.upper()
         hotkey = request.headers.get("Hotkey")
