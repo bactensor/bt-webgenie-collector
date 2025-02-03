@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/reef-technologies/cookiecutter-rt-django",
-  "commit": "fc11fc8c0c74cbf3386feaf29a7cdad1ee26571f",
+  "commit": "4564a698c98fb0df523caa6cd7fce98c465ae00d",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -60,7 +60,7 @@
         ".github/workflows/cruft-updates.yml"
       ],
       "_template": "https://github.com/reef-technologies/cookiecutter-rt-django",
-      "_commit": "fc11fc8c0c74cbf3386feaf29a7cdad1ee26571f"
+      "_commit": "4564a698c98fb0df523caa6cd7fce98c465ae00d"
     }
   },
   "directory": null
