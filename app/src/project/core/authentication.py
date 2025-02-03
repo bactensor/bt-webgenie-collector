@@ -13,13 +13,15 @@ from .models import Neuron
 
 
 class HotkeyAuthentication(BaseAuthentication):
-    def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, str]:
+    def authenticate(self, request: HttpRequest) -> tuple[AbstractBaseUser, str] | None:
         method = request.method.upper()
         hotkey = request.headers.get("Hotkey")
         nonce = request.headers.get("Nonce")
         signature = request.headers.get("Signature")
-        if not hotkey or not nonce or not signature:
-            raise AuthenticationFailed("Missing authentication headers.")
+        if not hotkey and not nonce and not signature:
+            return None
+        if not all((hotkey, nonce, signature)):
+            raise AuthenticationFailed("Missing some of required headers: hotkey, nonce, signature")
 
         if abs(time.time() - float(nonce)) > int(settings.SIGNATURE_EXPIRE_DURATION):
             raise AuthenticationFailed("Invalid nonce")
