@@ -1,5 +1,6 @@
 import json
 from io import StringIO
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.http import StreamingHttpResponse
@@ -24,8 +25,7 @@ class HasValidReferralPermission(BasePermission):
 
     def has_permission(self, request: Request, view) -> bool:
         referrer = request.headers.get("referer", "")
-        return referrer in settings.REST_FRAMEWORK_ALLOWED_REFERRERS
-
+        return urlparse(referrer).hostname in settings.REST_FRAMEWORK_ALLOWED_REFERRERS
 
 class DownloadOnlyIfReferralMixin(GenericViewSet):
     def get_permissions(self, *args, **kwargs) -> list[BasePermission]:
