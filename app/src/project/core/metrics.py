@@ -7,6 +7,13 @@ from django_prometheus.exports import ExportToDjangoView
 from prometheus_client import multiprocess
 
 
+task_solutions_count = prometheus_client.Counter(
+    'task_solutions_count',
+    'Number of task solutions sent per validator',
+    ['sender'],
+)
+
+
 class RecursiveMultiProcessCollector(multiprocess.MultiProcessCollector):
     """A multiprocess collector that scans the directory recursively"""
 

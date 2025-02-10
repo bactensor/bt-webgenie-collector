@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 
+from .metrics import task_solutions_count
+
 
 class Neuron(models.Model):
     hotkey = models.CharField(max_length=48)
@@ -62,6 +64,10 @@ class TaskSolution(AbstractDataFromValidator):
 
     def __str__(self) -> str:
         return f"Solution {self.pk}"
+
+    def save(self, *args, **kwargs) -> None:
+        super().save(*args, **kwargs)
+        task_solutions_count.labels(sender=self.sender.hotkey).inc()
 
 
 class EvaluationType(AbstractDataFromValidator):
