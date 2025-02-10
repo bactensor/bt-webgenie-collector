@@ -14,6 +14,7 @@ preload_app = env.bool("GUNICORN_PRELOAD_APP", True)
 bind = "unix:/var/run/gunicorn/gunicorn.sock"
 wsgi_app = "project.wsgi:application"
 access_logfile = "-"
+timeout = 120
 
 
 def child_exit(server, worker):

@@ -74,7 +74,7 @@ server {
     access_log                /dev/stdout;
     error_log                 /dev/stderr info;
 
-    client_max_body_size 100M;
+    client_max_body_size 256M;
 
     location /static/ {
         root /srv/;
@@ -101,7 +101,8 @@ server {
         proxy_set_header Host $http_host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
+
+        proxy_read_timeout 120s;
         proxy_pass http://gunicorn;
     }
 }
