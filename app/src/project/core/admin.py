@@ -100,14 +100,12 @@ class TaskSolutionAdmin(admin.ModelAdmin):
         "external_id",
         "challenge",
         "created_at",
-        "miner_answer",
         "received_at",
     )
     list_filter = (
         "received_at",
-        "challenge",
     )
-    search_fields = ("challenge__session__competition__name",)
+    search_fields = ("challenge__session__competition__name", "miner_answer")
     autocomplete_fields = (
         "sender",
         "challenge",
