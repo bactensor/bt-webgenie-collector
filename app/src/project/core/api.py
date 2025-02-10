@@ -27,6 +27,7 @@ class HasValidReferralPermission(BasePermission):
         referrer = request.headers.get("referer", "")
         return urlparse(referrer).hostname in settings.REST_FRAMEWORK_ALLOWED_REFERRERS
 
+
 class DownloadOnlyIfReferralMixin(GenericViewSet):
     def get_permissions(self, *args, **kwargs) -> list[BasePermission]:
         if self.action == "download":
