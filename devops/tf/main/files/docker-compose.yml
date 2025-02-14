@@ -89,8 +89,6 @@ services:
     command: celery --app=project --broker="redis://redis:6379/0" flower --basic_auth="flower:"
     depends_on:
       - celery-worker
-    ports:
-      - 5555:5555
 
   node-exporter:
     image: ghcr.io/reef-technologies/node-exporter-aws-ec2:latest
