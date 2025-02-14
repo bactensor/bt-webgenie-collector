@@ -3,8 +3,7 @@ import time
 
 from bittensor import Keypair
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractBaseUser, AnonymousUser
 from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -58,4 +57,5 @@ class HotkeyAuthentication(BaseAuthentication):
         if not is_valid:
             raise AuthenticationFailed("Invalid signature.")
 
-        return get_user_model(), hotkey
+        request.hotkey = hotkey
+        return AnonymousUser(), hotkey
