@@ -17,7 +17,7 @@ resource "aws_db_subnet_group" "self" {
 
 resource "aws_db_instance" "self" {
   identifier             = "${var.name}-${var.env}-db"
-  allocated_storage      = 10
+  allocated_storage      = 20
   max_allocated_storage  = 30
   storage_encrypted      = true
   engine                 = "postgres"
